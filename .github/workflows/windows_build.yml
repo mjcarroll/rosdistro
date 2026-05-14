@@ -48,5 +48,6 @@ jobs:
         COLCON_DEFAULTS_FILE: ${{ github.workspace }}\colcon_defaults_windows.yaml
         CARGO_BUILD_JOBS: 1
         ROS_DISTRO: rolling
+        CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER: rust-lld.exe
       run: |
         pixi run colcon build
