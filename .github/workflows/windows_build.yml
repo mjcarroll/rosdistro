@@ -31,7 +31,9 @@ jobs:
         cache: true
 
     - name: Import source code
-      run: pixi run vcs import src --input ros2.repos
+      run: |
+        mkdir src
+        pixi run vcs import src --input ros2.repos
 
     - name: Apply local patches
       run: |
