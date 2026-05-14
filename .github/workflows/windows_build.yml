@@ -2,9 +2,9 @@ name: Windows Build
 
 on:
   push:
-    branches: [ "master", "main" ]
+    branches: [ "master", "main", "lyrical-windows-ci" ]
   pull_request:
-    branches: [ "master", "main" ]
+    branches: [ "master", "main", "lyrical-windows-ci" ]
 
 jobs:
   build:
