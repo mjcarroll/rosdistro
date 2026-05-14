@@ -1,0 +1,50 @@
+name: Windows Build
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up MSVC
+      uses: ilammy/msvc-dev-cmd@v1.13.0
+
+    - name: Cache sccache
+      uses: actions/cache@v4
+      with:
+        path: ~/AppData/Local/Mozilla/sccache
+        key: ${{ runner.os }}-sccache-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-sccache-
+
+    - name: Setup Pixi
+      uses: prefix-dev/setup-pixi@v0.8.1
+      with:
+        pixi-version: v0.20.0
+        cache: true
+
+    - name: Import source code
+      run: pixi run vcs import src < ros2.repos
+
+    - name: Apply local patches
+      run: |
+        cd src/ament/ament_cmake
+        git apply ../../../patches/ament_cmake.patch
+        cd ../../../
+        cd src/ros2/rviz
+        git apply ../../../patches/rviz.patch
+
+    - name: Build Workspace
+      env:
+        COLCON_DEFAULTS_FILE: ${{ github.workspace }}\colcon_defaults_windows.yaml
+        CARGO_BUILD_JOBS: 1
+        ROS_DISTRO: rolling
+      run: |
+        pixi run colcon build

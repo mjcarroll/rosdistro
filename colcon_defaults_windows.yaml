@@ -1,0 +1,37 @@
+build:
+  merge-install: true
+  executor: parallel
+  # These packages are Linux-only (LTTng based) and fail on Windows/MacOS
+  packages-skip:
+    - lttngpy
+    - tracetools_trace
+    - ros2trace
+    - tracetools_launch
+    - test_ros2trace
+    - test_tracetools
+    - test_tracetools_launch
+    - tracetools_test
+    - rosbag2_performance_benchmarking
+    - rosbag2_performance_benchmarking_msgs
+  cmake-args:
+    - -GNinja
+    - --no-warn-unused-cli
+    - -DCMAKE_BUILD_TYPE=Release
+    - -DCMAKE_BUILD_WITH_INSTALL_RPATH:bool=TRUE
+    # CMake 4.x requires cmake_minimum_required >= 3.5
+    - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    - -Wno-deprecated
+    # Avoid BFD linker issues in conda environments
+    - -DSTACK_DETAILS_AUTO_DETECT:bool=FALSE
+    - -DSTACK_DETAILS_BFD:bool=FALSE
+    # Use sccache
+    - -DCMAKE_C_COMPILER_LAUNCHER=sccache
+    - -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+  event-handlers:
+    - console_cohesion+
+
+test:
+  merge-install: true
+  event-handlers:
+    - console_start_end+
+    - console_cohesion+
