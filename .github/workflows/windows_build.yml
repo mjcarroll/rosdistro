@@ -23,6 +23,7 @@ jobs:
         key: ${{ runner.os }}-sccache-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-sccache-
+        save-always: true
 
     - name: Setup Pixi
       uses: prefix-dev/setup-pixi@v0.8.1
@@ -50,4 +51,4 @@ jobs:
         ROS_DISTRO: rolling
         CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER: rust-lld.exe
       run: |
-        pixi run colcon build
+        pixi run colcon build --packages-up-to rclcpp

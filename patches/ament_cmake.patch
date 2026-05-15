@@ -1,0 +1,41 @@
+diff --git a/ament_cmake_vendor_package/cmake/ament_vendor.cmake b/ament_cmake_vendor_package/cmake/ament_vendor.cmake
+index 0b1a86c..6e8cc95 100644
+--- a/ament_cmake_vendor_package/cmake/ament_vendor.cmake
++++ b/ament_cmake_vendor_package/cmake/ament_vendor.cmake
+@@ -221,6 +221,14 @@ function(_ament_vendor TARGET_NAME VCS_TYPE VCS_URL VCS_VERSION PATCHES CMAKE_AR
+     set(CMAKE_ARGS_CONTENT "${CMAKE_ARGS_CONTENT}\nset(CMAKE_CXX_COMPILER [=[${CMAKE_CXX_COMPILER}]=] CACHE INTERNAL \"\")")
+   endif()
+ 
++  if(DEFINED CMAKE_C_COMPILER_LAUNCHER)
++    set(CMAKE_ARGS_CONTENT "${CMAKE_ARGS_CONTENT}\nset(CMAKE_C_COMPILER_LAUNCHER [=[${CMAKE_C_COMPILER_LAUNCHER}]=] CACHE INTERNAL \"\")")
++  endif()
++
++  if(DEFINED CMAKE_CXX_COMPILER_LAUNCHER)
++    set(CMAKE_ARGS_CONTENT "${CMAKE_ARGS_CONTENT}\nset(CMAKE_CXX_COMPILER_LAUNCHER [=[${CMAKE_CXX_COMPILER_LAUNCHER}]=] CACHE INTERNAL \"\")")
++  endif()
++
+   if(DEFINED CMAKE_C_FLAGS)
+     set(CMAKE_ARGS_CONTENT "${CMAKE_ARGS_CONTENT}\nset(CMAKE_C_FLAGS [=[${CMAKE_C_FLAGS}]=] CACHE INTERNAL \"\")")
+   endif()
+@@ -241,6 +249,10 @@ function(_ament_vendor TARGET_NAME VCS_TYPE VCS_URL VCS_VERSION PATCHES CMAKE_AR
+     set(CMAKE_ARGS_CONTENT "${CMAKE_ARGS_CONTENT}\nset(CMAKE_BUILD_TYPE [=[${CMAKE_BUILD_TYPE}]=] CACHE INTERNAL \"\")")
+   endif()
+ 
++  if(DEFINED CMAKE_POLICY_VERSION_MINIMUM)
++    set(CMAKE_ARGS_CONTENT "${CMAKE_ARGS_CONTENT}\nset(CMAKE_POLICY_VERSION_MINIMUM [=[${CMAKE_POLICY_VERSION_MINIMUM}]=] CACHE INTERNAL \"\")")
++  endif()
++
+   if(DEFINED CMAKE_IGNORE_PREFIX_PATH)
+     set(CMAKE_ARGS_CONTENT "${CMAKE_ARGS_CONTENT}\nset(CMAKE_IGNORE_PREFIX_PATH [=[${CMAKE_IGNORE_PREFIX_PATH}]=] CACHE INTERNAL \"\")")
+   endif()
+@@ -250,6 +262,10 @@ function(_ament_vendor TARGET_NAME VCS_TYPE VCS_URL VCS_VERSION PATCHES CMAKE_AR
+   endif()
+ 
+   list(PREPEND CMAKE_PREFIX_PATH ${_AMENT_CMAKE_VENDOR_PACKAGE_PREFIX_PATH})
++  if(EXISTS "${CMAKE_INSTALL_PREFIX}/opt")
++    file(GLOB _ament_vendor_opt_dirs "${CMAKE_INSTALL_PREFIX}/opt/*")
++    list(APPEND CMAKE_PREFIX_PATH ${_ament_vendor_opt_dirs})
++  endif()
+   set(CMAKE_ARGS_CONTENT "${CMAKE_ARGS_CONTENT}\nset(CMAKE_PREFIX_PATH [=[${CMAKE_PREFIX_PATH}]=] CACHE INTERNAL \"\")")
+ 
+   set(CMAKE_ARGS_CONTENT "${CMAKE_ARGS_CONTENT}\nset(BUILD_TESTING \"OFF\" CACHE INTERNAL \"\")")
