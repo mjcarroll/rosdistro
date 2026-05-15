@@ -52,3 +52,10 @@ jobs:
         CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER: rust-lld.exe
       run: |
         pixi run colcon build --packages-up-to rclcpp
+
+    - name: Stop Background Servers
+      if: always()
+      run: |
+        pixi run sccache --stop-server || exit 0
+        taskkill /F /IM mspdbsrv.exe || exit 0
+        taskkill /F /IM vctip.exe || exit 0
